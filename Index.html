@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cattle Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f9f0 100%);
+            color: #2d5a2d;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2d5a2d 0%, #4a7c4a 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(45, 90, 45, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #4a7c4a;
+        }
+
+        .section h2 {
+            color: #2d5a2d;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 2px solid #e8f5e8;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #2d5a2d;
+        }
+
+        input[type="number"], input[type="date"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #c8e6c8;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: #4a7c4a;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4a7c4a 0%, #5d8f5d 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #3a6a3a 0%, #4d7d4d 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 124, 74, 0.3);
+        }
+
+        .milk-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .total-display {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2d5a2d;
+            margin-top: 15px;
+        }
+
+        .report-section {
+            background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #c8e6c8;
+        }
+
+        .report-item:last-child {
+            border-bottom: none;
+        }
+
+        .profit {
+            color: #2d5a2d;
+            font-weight: bold;
+        }
+
+        .loss {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+
+        .weekly-report {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .alert-success {
+            background: #e8f5e8;
+            color: #2d5a2d;
+            border: 1px solid #4a7c4a;
+        }
+
+        .alert-danger {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .milk-inputs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐄 Cattle Management System</h1>
+            <p>Track your dairy production, costs, and profits efficiently</p>
+        </div>
+
+        <!-- Daily Milk Production -->
+        <div class="section">
+            <h2>📊 Daily Milk Production</h2>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" value="">
+            </div>
+            <div class="milk-inputs">
+                <div class="form-group">
+                    <label for="morningMilk">Morning Milk (Liters):</label>
+                    <input type="number" id="morningMilk" placeholder="0" step="0.1" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="eveningMilk">Evening Milk (Liters):</label>
+                    <input type="number" id="eveningMilk" placeholder="0" step="0.1" min="0">
+                </div>
+            </div>
+            <div class="total-display">
+                Total Daily Milk: <span id="totalMilk">0</span> Liters
+            </div>
+            <button class="btn" onclick="addDailyRecord()">Add Daily Record</button>
+        </div>
+
+        <!-- Monthly Settings -->
+        <div class="section">
+            <h2>⚙️ Monthly Settings</h2>
+            <div class="form-group">
+                <label for="milkPrice">Milk Price per Liter (₹):</label>
+                <input type="number" id="milkPrice" placeholder="0" step="0.01" min="0">
+            </div>
+            <button class="btn" onclick="setMonthlyPrice()">Set Monthly Price</button>
+        </div>
+
+        <!-- Weekly Feed Cost -->
+        <div class="section">
+            <h2>🌾 Weekly Feed Cost</h2>
+            <div class="form-group">
+                <label for="feedCost">Weekly Feed Cost (₹):</label>
+                <input type="number" id="feedCost" placeholder="0" step="0.01" min="0">
+            </div>
+            <button class="btn" onclick="setWeeklyFeedCost()">Set Weekly Feed Cost</button>
+        </div>
+
+        <!-- Current Status -->
+        <div class="section">
+            <h2>📈 Current Status</h2>
+            <div class="report-section">
+                <div class="report-item">
+                    <span>Current Milk Price:</span>
+                    <span id="currentPrice">₹0 per liter</span>
+                </div>
+                <div class="report-item">
+                    <span>Weekly Feed Cost:</span>
+                    <span id="currentFeedCost">₹0</span>
+                </div>
+                <div class="report-item">
+                    <span>Total Records:</span>
+                    <span id="totalRecords">0 days</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Weekly Report -->
+        <div class="section">
+            <h2>📋 Weekly Report</h2>
+            <button class="btn" onclick="generateWeeklyReport()">Generate This Week's Report</button>
+            <div id="weeklyReportContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let dailyRecords = [];
+        let monthlyMilkPrice = 0;
+        let weeklyFeedCost = 0;
+
+        // Set today's date as default
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+        // Calculate total milk
+        function calculateTotal() {
+            const morning = parseFloat(document.getElementById('morningMilk').value) || 0;
+            const evening = parseFloat(document.getElementById('eveningMilk').value) || 0;
+            const total = morning + evening;
+            document.getElementById('totalMilk').textContent = total.toFixed(1);
+            return total;
+        }
+
+        // Add event listeners for real-time calculation
+        document.getElementById('morningMilk').addEventListener('input', calculateTotal);
+        document.getElementById('eveningMilk').addEventListener('input', calculateTotal);
+
+        // Add daily record
+        function addDailyRecord() {
+            const date = document.getElementById('date').value;
+            const morning = parseFloat(document.getElementById('morningMilk').value) || 0;
+            const evening = parseFloat(document.getElementById('eveningMilk').value) || 0;
+            const total = morning + evening;
+
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+
+            if (total === 0) {
+                alert('Please enter milk production data');
+                return;
+            }
+
+            // Check if record already exists for this date
+            const existingIndex = dailyRecords.findIndex(record => record.date === date);
+            
+            if (existingIndex !== -1) {
+                // Update existing record
+                dailyRecords[existingIndex] = { date, morning, evening, total };
+                showAlert('Record updated successfully!', 'success');
+            } else {
+                // Add new record
+                dailyRecords.push({ date, morning, evening, total });
+                showAlert('Daily record added successfully!', 'success');
+            }
+
+            // Clear inputs
+            document.getElementById('morningMilk').value = '';
+            document.getElementById('eveningMilk').value = '';
+            document.getElementById('totalMilk').textContent = '0';
+            
+            // Update next day
+            const nextDay = new Date(date);
+            nextDay.setDate(nextDay.getDate() + 1);
+            document.getElementById('date').value = nextDay.toISOString().split('T')[0];
+
+            updateStatus();
+        }
+
+        // Set monthly milk price
+        function setMonthlyPrice() {
+            const price = parseFloat(document.getElementById('milkPrice').value);
+            if (price <= 0) {
+                alert('Please enter a valid price');
+                return;
+            }
+            monthlyMilkPrice = price;
+            showAlert('Monthly milk price set successfully!', 'success');
+            updateStatus();
+        }
+
+        // Set weekly feed cost
+        function setWeeklyFeedCost() {
+            const cost = parseFloat(document.getElementById('feedCost').value);
+            if (cost <= 0) {
+                alert('Please enter a valid feed cost');
+                return;
+            }
+            weeklyFeedCost = cost;
+            showAlert('Weekly feed cost set successfully!', 'success');
+            updateStatus();
+        }
+
+        // Update status display
+        function updateStatus() {
+            document.getElementById('currentPrice').textContent = `₹${monthlyMilkPrice.toFixed(2)} per liter`;
+            document.getElementById('currentFeedCost').textContent = `₹${weeklyFeedCost.toFixed(2)}`;
+            document.getElementById('totalRecords').textContent = `${dailyRecords.length} days`;
+        }
+
+        // Generate weekly report
+        function generateWeeklyReport() {
+            if (dailyRecords.length === 0) {
+                showAlert('No records found. Please add some daily records first.', 'danger');
+                return;
+            }
+
+            if (monthlyMilkPrice === 0) {
+                showAlert('Please set the monthly milk price first.', 'danger');
+                return;
+            }
+
+            if (weeklyFeedCost === 0) {
+                showAlert('Please set the weekly feed cost first.', 'danger');
+                return;
+            }
+
+            // Get current week's records
+            const today = new Date();
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - today.getDay());
+            
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+
+            const weeklyRecords = dailyRecords.filter(record => {
+                const recordDate = new Date(record.date);
+                return recordDate >= weekStart && recordDate <= weekEnd;
+            });
+
+            if (weeklyRecords.length === 0) {
+                showAlert('No records found for this week.', 'danger');
+                return;
+            }
+
+            // Calculate totals
+            const totalMilk = weeklyRecords.reduce((sum, record) => sum + record.total, 0);
+            const totalRevenue = totalMilk * monthlyMilkPrice;
+            const totalCost = weeklyFeedCost;
+            const profit = totalRevenue - totalCost;
+
+            // Generate report HTML
+            const reportHTML = `
+                <div class="weekly-report">
+                    <h3>Weekly Report (${weekStart.toLocaleDateString()} - ${weekEnd.toLocaleDateString()})</h3>
+                    <div class="report-section">
+                        <div class="report-item">
+                            <span>Total Milk Production:</span>
+                            <span>${totalMilk.toFixed(1)} liters</span>
+                        </div>
+                        <div class="report-item">
+                            <span>Average Daily Production:</span>
+                            <span>${(totalMilk / weeklyRecords.length).toFixed(1)} liters</span>
+                        </div>
+                        <div class="report-item">
+                            <span>Total Revenue:</span>
+                            <span>₹${totalRevenue.toFixed(2)}</span>
+                        </div>
+                        <div class="report-item">
+                            <span>Total Feed Cost:</span>
+                            <span>₹${totalCost.toFixed(2)}</span>
+                        </div>
+                        <div class="report-item">
+                            <span>Net ${profit >= 0 ? 'Profit' : 'Loss'}:</span>
+                            <span class="${profit >= 0 ? 'profit' : 'loss'}">₹${Math.abs(profit).toFixed(2)}</span>
+                        </div>
+                        <div class="report-item">
+                            <span>Days Recorded:</span>
+                            <span>${weeklyRecords.length} out of 7 days</span>
+                        </div>
+                    </div>
+                    
+                    <h4 style="margin-top: 20px; color: #2d5a2d;">Daily Breakdown:</h4>
+                    <div class="report-section">
+                        ${weeklyRecords.map(record => `
+                            <div class="report-item">
+                                <span>${new Date(record.date).toLocaleDateString()}</span>
+                                <span>Morning: ${record.morning}L | Evening: ${record.evening}L | Total: ${record.total}L</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('weeklyReportContent').innerHTML = reportHTML;
+            
+            if (profit >= 0) {
+                showAlert(`Weekly report generated! You made a profit of ₹${profit.toFixed(2)}`, 'success');
+            } else {
+                showAlert(`Weekly report generated! You had a loss of ₹${Math.abs(profit).toFixed(2)}`, 'danger');
+            }
+        }
+
+        // Show alert messages
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        updateStatus();
+    </script>
+</body>
+</html>
